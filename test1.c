@@ -45,7 +45,7 @@ int main() {
     scanf("%d",&temp);
     return 0;
 }
-
+//
 //דסטרוי רגיל, חשוב לשים לב שכל הפונקציות מסתיימות לפני הדסטרוי
 /*int main() {
     ThreadPool *threadPool = tpCreate(3);

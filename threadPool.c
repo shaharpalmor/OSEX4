@@ -43,7 +43,7 @@ ThreadPool *tpCreate(int numOfThreads) {
     return pool;
 
 }
-
+//
 void *func(void *args) {
     ThreadPool *pool = (ThreadPool *) args;
     pool->executeTasks(pool);
