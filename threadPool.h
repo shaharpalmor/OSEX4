@@ -15,7 +15,7 @@
 #define SIZEERROR 21
 
 
-enum stateDestroy{RUN,BEFORE_JOIN,AFTER_JOIN};
+enum stateDestroy{RUN,SHOULD_DESTROY,BEFORE_JOIN,AFTER_JOIN};
 
 typedef struct task{
     void (*function)(void *);
@@ -27,7 +27,7 @@ typedef struct thread_pool
     int threadCount;
     int stopped;
     enum stateDestroy state;
-    pthread_mutex_t lock,destroyLock;
+    pthread_mutex_t lock, queueIsEmpty;
     pthread_t *threads;
     OSQueue *queue; //pointer to the queue
     void (*executeTasks)(void *);
