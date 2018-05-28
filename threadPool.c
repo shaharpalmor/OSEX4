@@ -33,8 +33,8 @@ ThreadPool *tpCreate(int numOfThreads) {
         handleFail();
 
     //initialize  the mutex for the critical sections.
-    //if (pthread_mutex_init(&pool->lock, NULL) != 0)
-      //  handleFail();
+    if (pthread_mutex_init(&pool->lock, NULL) != 0)
+         handleFail();
     // create the theards in the pool
     for (i = 0; i < numOfThreads; i++) {
         if (pthread_create(&(pool->threads[i]), NULL, func, pool) != 0)
@@ -52,20 +52,14 @@ void *func(void *args) {
 void executeTasks(void *args) {
     ThreadPool *pool = (ThreadPool *) args;
     while (pool->state != AFTER_JOIN) {
-        //while (osIsQueueEmpty(pool->queue)&&(pool->state = BEFORE_JOIN)) {
-        //busy waiting
-        //  break;
-        //}
         pthread_mutex_lock(&pool->lock);
         if (pool->state != AFTER_JOIN) {
-            if ((!osIsQueueEmpty(pool->queue))) {
-
+            if (!osIsQueueEmpty(pool->queue)) {
                 task *task = osDequeue(pool->queue);
                 pthread_mutex_unlock(&pool->lock);
                 //activating the function inside the thread.
                 task->function(task->argument);
                 free(task);//free the allocation for the task
-
             } else {
                 pthread_mutex_unlock(&pool->lock);
                 sleep(1);
@@ -79,56 +73,54 @@ void executeTasks(void *args) {
 }
 
 
-    int tpInsertTask(ThreadPool *threadPool, void (*computeFunc)(void *), void *param) {
+int tpInsertTask(ThreadPool *threadPool, void (*computeFunc)(void *), void *param) {
 
 
-        if (threadPool->stopped)
-            return FAIL;
-        task *newTask = (task *) malloc(1 * sizeof(task));
-        if (newTask == NULL)
-            handleFail();
-        newTask->argument = param;
-        newTask->function = computeFunc;
-        pthread_mutex_lock(&threadPool->lock);
-        osEnqueue(threadPool->queue, newTask);
-        pthread_mutex_unlock(&threadPool->lock);
-        return SUCCESS;
-    }
+    if (threadPool->stopped)
+        return FAIL;
+    task *newTask = (task *) malloc(1 * sizeof(task));
+    if (newTask == NULL)
+        handleFail();
+    newTask->argument = param;
+    newTask->function = computeFunc;
+    pthread_mutex_lock(&threadPool->lock);
+    osEnqueue(threadPool->queue, newTask);
+    pthread_mutex_unlock(&threadPool->lock);
+    return SUCCESS;
+}
 
-    void tpDestroy(ThreadPool *threadPool, int shouldWaitForTasks) {
-        int i, j;
-        threadPool->stopped = 1;
-        if (shouldWaitForTasks) {
-            // Not allow insert more task to queue
-            //pthread_mutex_trylock(&threadPool->destroyLock);
-            //todo:busy waiting!!
-            while (1) {
-                if (osIsQueueEmpty(threadPool->queue)) {
-                    break;
-                } else {
-                    sleep(1);
-                }
+void tpDestroy(ThreadPool *threadPool, int shouldWaitForTasks) {
+    int i, j;
+    if (shouldWaitForTasks) {
+        // Not allow insert more task to queue
+        //todo:busy waiting!!
+        while (1) {
+            if (osIsQueueEmpty(threadPool->queue)) {
+                break;
+            } else {
+                sleep(1);
             }
         }
-        threadPool->state = BEFORE_JOIN;
-
-        for (i = 0; i < threadPool->threadCount; ++i)
-            pthread_join(threadPool->threads[i], NULL);
-
-        threadPool->state = AFTER_JOIN;
-        for (j = 0; j < threadPool->threadCount; j++)
-            free((void *) threadPool->threads[i]);
-
-        osDestroyQueue(threadPool->queue);
-        //free(threadPool->queue);
-        free(threadPool);
-        //pthread_mutex_unlock(&threadPool->lock);
-        //pthread_mutex_unlock(&threadPool->destroyLock);
-        pthread_mutex_destroy(&threadPool->lock);
-        //pthread_mutex_destroy(&threadPool->destroyLock);
     }
+    threadPool->state = BEFORE_JOIN;
+    threadPool->stopped = 1;
 
-    void handleFail() {
-        write(STDERR, ERROR, SIZEERROR);
-        exit(FAIL);
-    }
+    for (i = 0; i < threadPool->threadCount; ++i)
+        pthread_join(threadPool->threads[i], NULL);
+
+    threadPool->state = AFTER_JOIN;
+    /*for (j = 0; j < threadPool->threadCount; j++)
+        free((void *) threadPool->threads[j]);
+*/
+    free(threadPool->threads);
+    osDestroyQueue(threadPool->queue);
+
+    free(threadPool);
+    pthread_mutex_destroy(&threadPool->lock);
+
+}
+
+void handleFail() {
+    write(STDERR, ERROR, SIZEERROR);
+    exit(FAIL);
+}

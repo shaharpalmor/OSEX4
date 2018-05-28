@@ -35,10 +35,11 @@ void test_thread_pool_sanity()
    tpDestroy(tp,0);
 }
 
-
+/*
 int main()
 {
    test_thread_pool_sanity();
 
    return 0;
 }
+*/

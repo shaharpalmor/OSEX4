@@ -4,8 +4,8 @@ project(ex4)
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread")
 
-set(SOURCE_FILES osqueue.c osqueue.h  threadPool.c threadPool.h liz.c)
-add_executable(ex4 ${SOURCE_FILES} liz.c)
+set(SOURCE_FILES osqueue.c osqueue.h  threadPool.c threadPool.h test1.c)
+add_executable(ex4 ${SOURCE_FILES} test1.c)
 
 
 
