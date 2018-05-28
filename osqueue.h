@@ -1,6 +1,6 @@
 #ifndef __OS_QUEUE__
 #define __OS_QUEUE__
-//
+
 
 typedef struct os_node
 {

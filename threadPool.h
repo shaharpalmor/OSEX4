@@ -21,7 +21,7 @@ typedef struct task{
     void (*function)(void *);
     void *argument;
 } task;
-//
+
 typedef struct thread_pool
 {
     int threadCount;
