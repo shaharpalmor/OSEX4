@@ -21,8 +21,8 @@ void  function2Sleep();
     int temp;
     scanf("%d",&temp);
     return 0;
-}
-*/
+}*/
+
 //מספרים מודפסים באיזה סדר שבא להם
 /*int main() {
     ThreadPool* threadPool =tpCreate(3);
@@ -110,7 +110,8 @@ int main() {
     return 0;
 }
 
-/*void hello (void* a)
+/*
+void hello (void* a)
 {
     printf("hello\n");
     sleep(3);
@@ -133,7 +134,8 @@ void test_thread_pool_sanity()
 int main(){
     test_thread_pool_sanity();
 
-}*/
+}
+*/
 
 
 
@@ -170,8 +172,8 @@ int main()
 
     return 0;
 }
-
 */
+
 
 void  function3() {
     int i;
