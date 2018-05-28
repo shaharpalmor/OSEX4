@@ -27,6 +27,7 @@ ThreadPool *tpCreate(int numOfThreads) {
     pool->threadCount = numOfThreads;
     pool->queue = osCreateQueue();
     pool->stopped = 0;
+    pool->state = RUN;
     pool->executeTasks = executeTasks;
     //initialize the threads in the pool, and the tasks in the queue
     if ((pool->threads = (pthread_t *) malloc(sizeof(pthread_t) * numOfThreads)) == NULL)

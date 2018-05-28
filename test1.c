@@ -35,7 +35,7 @@ void  function2Sleep();
     return 0;
 }*/
 //מספרים מודפסים באיזה סדר שבא להם
-int main() {
+/*int main() {
     ThreadPool* threadPool =tpCreate(3);
     char * args = (char *)malloc(10);
     tpInsertTask(threadPool,function1WithSleep,args);
@@ -44,7 +44,7 @@ int main() {
     int temp;
     scanf("%d",&temp);
     return 0;
-}
+}*/
 ////
 //דסטרוי רגיל, חשוב לשים לב שכל הפונקציות מסתיימות לפני הדסטרוי
 /*int main() {
@@ -75,6 +75,7 @@ int main() {
     return 0;
 }*/
 //דסטרוי מיוחד, יש לוודא שכל המשימות מתבצעות!!
+
 /*
 int main() {
     ThreadPool *threadPool = tpCreate(1);
@@ -87,10 +88,11 @@ int main() {
     int temp;
     scanf("%d", &temp);
     return 0;
-}*/
+}
+*/
 
 //בדיקה שאחרי שקראנו לדסטרוי לא ניתן להוסיף משימות
-/*
+
 int main() {
     ThreadPool *threadPool = tpCreate(1);
     char *args = (char *) malloc(10);
@@ -106,7 +108,7 @@ int main() {
     int temp;
     scanf("%d", &temp);
     return 0;
-}*/
+}
 
 /*void hello (void* a)
 {
