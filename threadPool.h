@@ -7,7 +7,6 @@
 #define __THREAD_POOL__
 #include "osqueue.h"
 #include "pthread.h"
-#define ThreadPoolSize 5
 #define FAIL -1
 #define SUCCESS 1
 #define STDERR 2

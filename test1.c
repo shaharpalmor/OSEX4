@@ -76,7 +76,7 @@ void  function2Sleep();
 }*/
 //דסטרוי מיוחד, יש לוודא שכל המשימות מתבצעות!!
 
-/*
+
 int main() {
     ThreadPool *threadPool = tpCreate(1);
     char *args = (char *) malloc(10);
@@ -89,10 +89,10 @@ int main() {
     scanf("%d", &temp);
     return 0;
 }
-*/
+
 
 //בדיקה שאחרי שקראנו לדסטרוי לא ניתן להוסיף משימות
-
+/*
 int main() {
     ThreadPool *threadPool = tpCreate(1);
     char *args = (char *) malloc(10);
@@ -108,7 +108,7 @@ int main() {
     int temp;
     scanf("%d", &temp);
     return 0;
-}
+}*/
 
 /*
 void hello (void* a)

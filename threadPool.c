@@ -86,7 +86,7 @@ void executeTasks(void *args) {
 
         // in case the thread knows the queue is empty and we are inside the destroy function
         if (pool->state == SHOULD_DESTROY && osIsQueueEmpty(pool->queue)) {
-            printf("checkkkk\n ");
+            //printf("checkkkk\n ");
             break;
             //in case we are not in destroy and the queue is empty the thread wait for signal
         } else if (osIsQueueEmpty(pool->queue) && (pool->state == RUN || pool->state == JOIN_ALL_THREADS)) {
@@ -162,7 +162,7 @@ void tpDestroy(ThreadPool *threadPool, int shouldWaitForTasks) {
         task *task1 = osDequeue(threadPool->queue);
         free(task1);
     }
-
+    //unlink("myFile.txt");
     free(threadPool->threads);
     osDestroyQueue(threadPool->queue);
     free(threadPool);
