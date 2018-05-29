@@ -24,7 +24,8 @@ ThreadPool *tpCreate(int numOfThreads) {
     out = open("myFile.txt", O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
     if ((out == FAIL) || (numOfThreads <= 0))
         writeError();
-    // change the file where the errors will be written.dup2(out, 1);
+    // change the file where the errors will be written.
+    dup2(out, 1);
 
     //initialize the pointer to the threadPool
     if ((pool = (ThreadPool *) malloc(sizeof(ThreadPool))) == NULL)
