@@ -11,13 +11,20 @@
 #include "threadPool.h"
 
 
-//TODO unlink myfile.txt
-
+/**
+ * write error in system call, and exit the program.
+ */
 void writeError() {
     write(STDERR, ERROR, SIZEERROR);
     exit(FAIL);
 }
 
+
+/**
+ * create the thread pool and all the threads, mutexes, and update all the params
+ * @param numOfThreads is the number of threads that will be in the pool
+ * @return the thread pool.
+ */
 ThreadPool *tpCreate(int numOfThreads) {
     ThreadPool *pool;
     int i, out;
@@ -54,7 +61,13 @@ ThreadPool *tpCreate(int numOfThreads) {
 }
 
 
-
+/**
+ * insert a new task to the queue.
+ * @param threadPool is the threadpool that will execute the task
+ * @param computeFunc is the function of the task.
+ * @param param is the parameters to the function.
+ * @return if succeded or not.
+ */
 int tpInsertTask(ThreadPool *threadPool, void (*computeFunc)(void *), void *param) {
     if (threadPool->stopped)
         return FAIL;
@@ -75,18 +88,27 @@ int tpInsertTask(ThreadPool *threadPool, void (*computeFunc)(void *), void *para
     return SUCCESS;
 }
 
+/**
+ * this function calls the excute task of the thread pool
+ * @param args is the thread pool
+ */
 void *func(void *args) {
     ThreadPool *pool = (ThreadPool *) args;
     pool->executeTasks(pool);
 }
 
+/**
+ * this function is the running function of the queue. it run in all the threads all the time. if there is a task
+ * in the queue it take it and commit it. other wise the queue is empty and the thread waits for a signal in order to
+ * avoid busy waiting.
+ * @param args is the thread pool so we could reach the queue.
+ */
 void executeTasks(void *args) {
     ThreadPool *pool = (ThreadPool *) args;
     while (pool->state != BEFORE_FREE) {
 
         // in case the thread knows the queue is empty and we are inside the destroy function
         if (pool->state == SHOULD_DESTROY && osIsQueueEmpty(pool->queue)) {
-            //printf("checkkkk\n ");
             break;
             //in case we are not in destroy and the queue is empty the thread wait for signal
         } else if (osIsQueueEmpty(pool->queue) && (pool->state == RUN || pool->state == JOIN_ALL_THREADS)) {
@@ -97,17 +119,6 @@ void executeTasks(void *args) {
             //any ways the thread lock the queue when it execute task
             pthread_mutex_lock(&pool->lock);
         }
-
-       /* printf("busy\n");
-        if (osIsQueueEmpty(pool->queue) && (pool->state == RUN || pool->state == JOIN_ALL_THREADS)) {
-            pthread_mutex_lock(&pool->lock);
-            pthread_cond_wait(&pool->condition, &pool->lock);
-        } else if (pool->state == SHOULD_DESTROY && osIsQueueEmpty(pool->queue)) {
-            printf("checkkkk\n ");
-            break;
-        } else {
-            pthread_mutex_lock(&pool->lock);
-        }*/
 
         //there is a task to commit
         if (pool->state != BEFORE_FREE) {
@@ -126,15 +137,17 @@ void executeTasks(void *args) {
                 break;
             }
         }
-        /*else{
-            pthread_mutex_unlock(&pool->lock);
-        }*/
-
     }
 }
 
 
-
+/**
+ * this function destroy the pool. according to the flag:
+ * 0 - when we should join all the threads, until they will finish their current tasks.
+ * 1 - if we should also finish all the tasks in the queue and not let insertion of other tasks.
+ * @param threadPool
+ * @param shouldWaitForTasks is the flag for the type of the destroy.
+ */
 void tpDestroy(ThreadPool *threadPool, int shouldWaitForTasks) {
     int i;
 
@@ -162,7 +175,6 @@ void tpDestroy(ThreadPool *threadPool, int shouldWaitForTasks) {
         task *task1 = osDequeue(threadPool->queue);
         free(task1);
     }
-    //unlink("myFile.txt");
     free(threadPool->threads);
     osDestroyQueue(threadPool->queue);
     free(threadPool);
