@@ -76,7 +76,7 @@ void  function2Sleep();
 }*/
 //דסטרוי מיוחד, יש לוודא שכל המשימות מתבצעות!!
 
-
+/*
 int main() {
     ThreadPool *threadPool = tpCreate(1);
     char *args = (char *) malloc(10);
@@ -88,12 +88,12 @@ int main() {
     int temp;
     scanf("%d", &temp);
     return 0;
-}
+}*/
 
 
 //בדיקה שאחרי שקראנו לדסטרוי לא ניתן להוסיף משימות
-/*
-int main() {
+
+/*int main() {
     ThreadPool *threadPool = tpCreate(1);
     char *args = (char *) malloc(10);
 
@@ -134,10 +134,9 @@ void test_thread_pool_sanity()
 int main(){
     test_thread_pool_sanity();
 
-}
+}*/
 
 
-*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -145,7 +144,7 @@ int main(){
 #include "threadPool.h"
 
 
-/*
+
 void hello (void* a)
 {
     printf("hello\n");
@@ -156,14 +155,14 @@ void test_thread_pool_sanity()
 {
     int i;
 
-    ThreadPool* tp = tpCreate(5);
+    ThreadPool* tp = tpCreate(1);
 
-    for(i=0; i<5; ++i)
+    for(i=0; i<10; ++i)
     {
         tpInsertTask(tp,hello,NULL);
     }
 
-    tpDestroy(tp,1);
+    tpDestroy(tp,0);
 }
 
 
@@ -173,7 +172,7 @@ int main()
 
     return 0;
 }
-*/
+
 
 
 
