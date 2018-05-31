@@ -15,8 +15,16 @@
  * write error in system call, and exit the program.
  */
 void writeError() {
+    int out;
+    out = open("myFile.txt", O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+    if (out == FAIL)
+        writeError();
+    // change the file where the errors will be written.
+    dup2(out, 1);
     write(STDERR, ERROR, SIZEERROR);
+    dup2(1,out);
     exit(FAIL);
+
 }
 
 
@@ -27,13 +35,11 @@ void writeError() {
  */
 ThreadPool *tpCreate(int numOfThreads) {
     ThreadPool *pool;
-    int i, out;
-    out = open("myFile.txt", O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-    if ((out == FAIL) || (numOfThreads <= 0))
-        writeError();
-    // change the file where the errors will be written.
-    dup2(out, 1);
+    int i;
 
+    if(numOfThreads <= 0){
+        writeError();
+    }
     //initialize the pointer to the threadPool
     if ((pool = (ThreadPool *) malloc(sizeof(ThreadPool))) == NULL)
         writeError();
@@ -130,7 +136,7 @@ void executeTasks(void *args) {
                 free(task);//free the allocation for the task
             } else {
                 pthread_mutex_unlock(&pool->lock);
-                sleep(1);
+                //sleep(1);
             }
             // we are inside the destroy function, and finished the tasks in the queue
             if (pool->state == JOIN_ALL_THREADS) {
