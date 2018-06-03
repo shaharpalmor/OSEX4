@@ -18,7 +18,7 @@ void writeError() {
     int out;
     out = open("myFile.txt", O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
     if (out == FAIL)
-        writeError();
+        exit(FAIL);
     // change the file where the errors will be written.
     dup2(out, 1);
     write(STDERR, ERROR, SIZEERROR);
